@@ -36,7 +36,7 @@ export type Examination = {
     exam_code: string;
     name: string;
     fees: number;
-    description: string | null;
+    description: string;
     session: string;
     papers: any[];
     papers_count: number;
