@@ -1,10 +1,10 @@
 // import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Input } from "@/components/ui/input"
+// import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ThemeToggler } from "./LayoutComponents/ThemeToggler"
 import AvatarMenu from "./LayoutComponents/AvatarMenu"
 import { VerticalCompactSideBar, VerticalFullSideBar } from "./LayoutComponents/NavigationMenus"
-import { Search } from "lucide-react"
+// import { Search } from "lucide-react"
 import BreadcrumbNav from "./LayoutComponents/BreadcrumbNav"
 import NotificationMenu from "./LayoutComponents/NotificationMenu"
 type MainLayoutProps = {
@@ -20,12 +20,12 @@ export function MainLayout({children}:MainLayoutProps) {
                         <VerticalFullSideBar />
                         <BreadcrumbNav />
                         <div className="relative ml-auto flex-1 md:grow-0">
-                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            {/* <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="search"
                                 placeholder="Search ..."
                                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-                            />
+                            /> */}
                         </div>
                         <NotificationMenu />
                         <ThemeToggler />

@@ -31,3 +31,16 @@ export const subjects = {
     'Music': 'music',
     'Dance': 'dance',
 }
+export const question_types = {
+    'Multiple Choice': 'multiple_choice',
+    'True/False': 'true_false',
+    'Short Answer': 'short_answer',
+    'Essay': 'essay',
+    'Subjective': 'subjective'
+}
+
+export const question_difficulty = {
+    'Easy': 'easy',
+    'Medium': 'medium',
+    'Hard': 'hard'
+}

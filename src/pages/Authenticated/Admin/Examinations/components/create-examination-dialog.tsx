@@ -35,7 +35,7 @@ const CreateExaminationDialog:React.FC<CreateExaminationDialogProps> = ({childre
 
     return (
         <Dialog open={isPending?true:open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 {children ?? <Button><PlusCircle className="w-4 h-4" />Create Examination</Button>}
             </DialogTrigger>
             <DialogContent>

@@ -12,6 +12,19 @@ export type Question = {
     answer?: string | null;
     explanation?: string | null;
 }
+export type QuestionType = {
+    id: string;
+    school_code: string;
+    question: string;
+    course_id: string;
+    subject: string;
+    topic: string;
+    difficulty: string;
+    type: string;
+    options?: string[] | null;
+    answer?: string | null;
+    explanation?: string | null;
+}
 
 export type Paper = {
     id: string;

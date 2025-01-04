@@ -86,7 +86,7 @@ const ExaminationDeleteConfirmationDialog = ({examination,children}:ExaminationD
     const queryClient = useQueryClient();
     const handleDelete = ()=>{
         setLoading(true);
-        admin_apis.examination.delete(examination.exam_code).then((res)=>{
+        admin_apis.examination.delete(examination.exam_code).then(()=>{
             setOpen(false);
             queryClient.invalidateQueries({queryKey:["examinations"]});
             toast.success("Examination deleted successfully");

@@ -1,12 +1,12 @@
 import CreateExaminationDialog from "./components/create-examination-dialog";
 import { admin_apis } from "@/lib/helpers/api_urls";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { Examination } from "@/types/examination";
 import ExaminationCard from "./components/examination-card";
 import { useEffect } from "react";
 import { setBreadcrumb } from "@/redux/Features/uiSlice";
 import { useDispatch } from "react-redux";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ExaminationPage = () => {
     const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const ExaminationPage = () => {
             <div className="flex gap-2 justify-end items-center mb-4">
                 <CreateExaminationDialog />
             </div>
-            {isLoading && <div className="flex justify-center items-center h-screen"><Loader2 className="w-4 h-4 animate-spin" /></div>}
+            {isLoading && <ExaminationPageSkeleton />}
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {data?.map((examination)=>(
                     <ExaminationCard examination={examination} />
@@ -39,3 +39,11 @@ const ExaminationPage = () => {
 }
 
 export default ExaminationPage
+
+const ExaminationPageSkeleton = ()=>{
+    return <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({length:6}).map((_,index)=>(
+            <Skeleton key={index} className="h-[200px]" />
+        ))}
+    </div>
+}
