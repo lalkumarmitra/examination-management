@@ -2,29 +2,54 @@ import { CustomSelect } from "@/components/Custom/CustomSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { question_difficulty, question_types } from "@/lib/constants";
+import { admin_apis } from "@/lib/helpers/api_urls";
+import Swal from "sweetalert2";
 import { CourseType } from "@/types/client";
 import { Examination } from "@/types/examination";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
-import { PropsWithChildren, useState } from "react";
-
-interface AddQuestionSheetProps extends PropsWithChildren{
-    examination?:Examination
-    course?:CourseType
-    subject?:string
-    disabled?:boolean
+import { useState } from "react";
+interface AddQuestionSheetProps {
+  examination?: Examination;
+  course?: CourseType;
+  subject?: string;
+  disabled?: boolean;
 }
 
-const AddQuestionSheet = ({examination,course,subject,disabled=false}:AddQuestionSheetProps)=>{
-    const [open,setOpen] = useState(false);
-    const [questionType,setQuestionType] = useState<string | null>('multiple_choice');
-    const handleSubmit = (e:React.FormEvent<HTMLFormElement>)=>{
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        console.log(formData.get('option'));
-    }
+const AddQuestionSheet = ({ examination, course, subject, disabled = false }: AddQuestionSheetProps) => {
+  const [open, setOpen] = useState(false);
+  const [questionType, setQuestionType] = useState<string>("multiple_choice");
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (formData: FormData) => admin_apis.question.create(formData),
+    onSuccess: (res) => {
+      queryClient.setQueryData(["question"], (oldData: any) => {
+        if (!oldData?.data?.questions) {
+          return { ...oldData, data: { ...oldData?.data, questions: [res.data.question] } };
+        }
+        return {
+          ...oldData,
+          data: { ...oldData.data, questions: [res.data.question, ...oldData.data.questions] },
+        };
+      });
+      Swal.fire("Success", res.message, "success");
+      setOpen(false);
+    },
+    onError: (err: any) => {
+        Swal.fire("Error", err.response ? err.response.data.message : err.message, "error");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    mutation.mutate(formData)
+  };
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
