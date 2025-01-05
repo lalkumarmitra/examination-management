@@ -31,7 +31,7 @@ const ChooseQuestionDialog = ({disabled=false,course,subject}:ChooseQuestionDial
         staleTime:1000*60*5,
         gcTime:1000*60*5,
     });
-    const { data: questions, isLoading: questionsLoading } = useQuery<QuestionType[]>({
+    const { data: questions=[], isLoading: questionsLoading } = useQuery<QuestionType[]>({
         queryKey: ['questions', selectedCourse?.id, selectedSubject],
         queryFn: () => {
             const formData = new FormData();
@@ -39,7 +39,7 @@ const ChooseQuestionDialog = ({disabled=false,course,subject}:ChooseQuestionDial
             formData.append('subject', selectedSubject || '');
             return admin_apis.question.search(formData);
         },
-        select: (data: any) => data.data.question,
+        select: (data: any) => data.data.questions,
         staleTime: 1000 * 60 * 5,
         gcTime: 1000 * 60 * 5,
         enabled: !!selectedCourse && !!selectedSubject, // Runs query only if conditions are met
@@ -104,19 +104,25 @@ const ChooseQuestionDialog = ({disabled=false,course,subject}:ChooseQuestionDial
                             <Loader2 className="size-8 animate-spin" />
                         </div>
                     ):(
-                        <ul className="grid gap-2 rounded-md border p-2 shadow-sm min-h-80 overflow-y-auto">
-                            {(selectedCourse && selectedSubject && !questions?.length) && (
+                        <div className="grid gap-2 rounded-md border p-2 shadow-sm min-h-80 overflow-y-auto">
+                            {(selectedCourse && selectedSubject && !questions?.length) ? (
                                 <div className="flex justify-center items-center">
                                     <p className="text-sm text-gray-500">No questions found</p>
                                 </div>
+                            ):(
+                                <ul className="">
+                                    {questions?.filter(q=>{
+                                        if(!topic) return true;
+                                        return q.topic.toLowerCase().includes(topic.toLowerCase())
+                                    }).map((question:QuestionType)=>(
+                                        <li key={question.id} className="mb-2 flex items-center justify-between">
+                                            <p className="flex justify-start items-center gap-2"><Checkbox />{question.question}</p>
+                                            <p className="text-muted-foreground text-xs capitalize" >{question.topic}</p>
+                                        </li>
+                                    ))}
+                                </ul>
                             )}
-                            {questions?.map((question:QuestionType)=>(
-                                <li key={question.id}>
-                                    <Checkbox />
-                                    <p>{question.question}</p>
-                                </li>
-                            ))}
-                        </ul>
+                        </div>
                     )}
                 </div>
                 <DialogFooter>
