@@ -6,12 +6,12 @@ import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetT
 import { Textarea } from "@/components/ui/textarea";
 import { question_difficulty, question_types } from "@/lib/constants";
 import { admin_apis } from "@/lib/helpers/api_urls";
-import Swal from "sweetalert2";
 import { CourseType } from "@/types/client";
 import { Examination } from "@/types/examination";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 interface AddQuestionSheetProps {
   examination?: Examination;
   course?: CourseType;
@@ -27,14 +27,12 @@ const AddQuestionSheet = ({ examination, course, subject, disabled = false }: Ad
   const {mutate,isPending} = useMutation({ // mutaion varable ko destructure kar ke mutate and is pending nikal liya
     mutationFn: (formData: FormData) => admin_apis.question.create(formData),
     onSuccess: (res) => {
-         const queryKey = ['questions', course?.id, subject];
-         queryClient.invalidateQueries({ queryKey: queryKey, exact: true});
-      Swal.fire("Success", res.message, "success");
-      setOpen(false);
+        const queryKey = ['questions', course?.id, subject];
+        queryClient.invalidateQueries({ queryKey: queryKey, exact: true});
+        toast.success(res.message);
+        setOpen(false);
     },
-    onError: (err: any) => {
-        Swal.fire("Error", err.response ? err.response.data.message : err.message, "error");
-    },
+    onError: (err: any) => toast.error(err.response ? err.response.data.message : err.message),
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

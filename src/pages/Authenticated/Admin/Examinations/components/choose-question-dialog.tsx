@@ -115,7 +115,7 @@ const ChooseQuestionDialog = ({disabled=false,course,subject}:ChooseQuestionDial
                                         if(!topic) return true;
                                         return q.topic.toLowerCase().includes(topic.toLowerCase())
                                     }).map((question:QuestionType)=>(
-                                        <li key={question.id} className="mb-2 flex items-center justify-between border-b pb-2">
+                                        <li key={question.id} className="mb-2 flex items-center justify-between shadow-sm py-2 px-4">
                                             <p className="flex justify-start items-start gap-2"><Checkbox />{question.question}</p>
                                             <p className="text-muted-foreground text-xs capitalize" >{question.topic}</p>
                                         </li>
