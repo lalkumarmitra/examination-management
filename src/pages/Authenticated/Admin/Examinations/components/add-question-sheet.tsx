@@ -27,15 +27,8 @@ const AddQuestionSheet = ({ examination, course, subject, disabled = false }: Ad
   const {mutate,isPending} = useMutation({ // mutaion varable ko destructure kar ke mutate and is pending nikal liya
     mutationFn: (formData: FormData) => admin_apis.question.create(formData),
     onSuccess: (res) => {
-      queryClient.setQueryData(["question"], (oldData: any) => {
-        if (!oldData?.data?.questions) {
-          return { ...oldData, data: { ...oldData?.data, questions: [res.data.question] } };
-        }
-        return {
-          ...oldData,
-          data: { ...oldData.data, questions: [res.data.question, ...oldData.data.questions] },
-        };
-      });
+         const queryKey = ['questions', course?.id?.toString(), subject].filter((key): key is string => key !== undefined);
+         queryClient.invalidateQueries({ queryKey: queryKey, exact: true});
       Swal.fire("Success", res.message, "success");
       setOpen(false);
     },
