@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import { CourseType } from "@/types/client";
 import { Examination } from "@/types/examination";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PlusIcon } from "lucide-react";
+import { Loader2, PlusIcon } from "lucide-react";
 import { useState } from "react";
 interface AddQuestionSheetProps {
   examination?: Examination;
@@ -24,7 +24,7 @@ const AddQuestionSheet = ({ examination, course, subject, disabled = false }: Ad
   const [questionType, setQuestionType] = useState<string>("multiple_choice");
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const {mutate,isPending} = useMutation({ // mutaion varable ko destructure kar ke mutate and is pending nikal liya
     mutationFn: (formData: FormData) => admin_apis.question.create(formData),
     onSuccess: (res) => {
       queryClient.setQueryData(["question"], (oldData: any) => {
@@ -47,11 +47,12 @@ const AddQuestionSheet = ({ examination, course, subject, disabled = false }: Ad
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    mutation.mutate(formData)
+    mutate(formData) //mutation.mutate nai karna ha ab simple mutate ka access hai ab to wahi use kar liya
   };
 
     return (
-        <Sheet open={open} onOpenChange={setOpen}>
+        //if the is pending is true the sheet is always open if not then open is uesed 
+        <Sheet open={isPending || open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button 
                     disabled={disabled}
@@ -136,7 +137,7 @@ const AddQuestionSheet = ({ examination, course, subject, disabled = false }: Ad
                         </div>
                     </div>
                     <SheetFooter className="absolute bottom-0 left-0 w-full p-4">
-                        <Button type="submit">Add Question</Button>
+                        <Button disabled={isPending} type="submit"> {isPending && (<Loader2 className="size-4 animate-spin mr-2" />)} Add Question</Button>
                     </SheetFooter>
                 </form>
             </SheetContent>
